@@ -1,5 +1,5 @@
-let response = await fetch('/salary.json'); // Replace with your file path
-let data1 = await response.json(); // For CSV data
-console.log(data1);
-
-export default data1;
+export async function fetchData() {
+    const response = await fetch('/salary.json'); // Replace with your file path
+    const data = await response.json(); // Assuming the file is JSON
+    return data;
+}
