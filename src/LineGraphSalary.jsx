@@ -23,7 +23,7 @@ ChartJS.register(
 
 const LineGraphSalary = ({ data }) => {
     const years = data.map(item => item.year);
-    const averageSalary = data.map(item => item.totalJobs);
+    const averageSalary = data.map(item => item.averageSalary);
     //console.log(years, averageSalary);
     const chartData = {
         labels: years,
