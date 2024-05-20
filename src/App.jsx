@@ -12,6 +12,7 @@ function App() {
     const getData = async () => {
       try {
         const fetchedData = await fetchData();
+        console.log('fetched data', fetchedData);
         setData(fetchedData);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -24,23 +25,34 @@ function App() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className='text-center'>Loading...</div>;
   }
-
+  console.log('data', data);
   const processedData = data.reduce((acc, curr) => {
     const year = curr.work_year;
+    const salary = Number(curr.salary_in_usd);
+    const jobTitle = curr.job_title;
+
+    if (!year || !jobTitle || isNaN(salary)) {
+      return acc;
+    }
+
     if (!acc[year]) {
       acc[year] = { year, totalJobs: 0, totalSalary: 0, jobTitles: {} };
     }
+
     acc[year].totalJobs += 1;
-    acc[year].totalSalary += curr.salary_in_usd;
-    if (!acc[year].jobTitles[curr.job_title]) {
-      acc[year].jobTitles[curr.job_title] = 0;
+    acc[year].totalSalary += salary;
+
+    if (!acc[year].jobTitles[jobTitle]) {
+      acc[year].jobTitles[jobTitle] = 0;
     }
-    acc[year].jobTitles[curr.job_title] += 1;
+
+    acc[year].jobTitles[jobTitle] += 1;
+
     return acc;
   }, {});
-
+  console.log('processedData', processedData);
   const tableData = Object.values(processedData).map(item => ({
     key: item.year,
     year: item.year,
@@ -48,6 +60,7 @@ function App() {
     averageSalary: (item.totalSalary / item.totalJobs).toFixed(2),
     jobTitles: item.jobTitles
   }));
+  console.log('tableData', tableData);
 
   const mainColumns = [
     {
@@ -95,7 +108,7 @@ function App() {
         expandable={{ expandedRowRender }}
         pagination={false}
       />
-      <div className='w-1/2 h-1/2 flex flex-row p-10'>
+      <div className='md:w-1/2 md:h-1/2 flex flex-col sm:flex-row p-10'>
         <LineGraphJobs data={tableData} />
         <LineGraphSalary data={tableData} />
       </div>
