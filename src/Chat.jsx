@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator, ConversationHeader, Avatar } from '@chatscope/chat-ui-kit-react';
-
+import { fetchData } from './data';
 
 // const API_KEY = process.env.REACT_APP_OPENAI_API_KEY;
 const API_KEY = "YOUR_API_KEY";
@@ -11,21 +11,7 @@ const systemMessage = {
     "content": "Explain things like you're talking to a software professional with 2 years of experience."
 };
 
-const data = [
-    {
-        "year": 2024,
-        "experience_level": "MI",
-        "employment_type": "FT",
-        "job_title": "Data Scientist",
-        "salary_in_usd": 120000,
-        "salary_currency": "USD",
-        "salary": 120000,
-        "employee_residence": "AU",
-        "remote_ratio": 0,
-        "company_location": "AU",
-        "company_size": "S"
-    },
-];
+const data = await fetchData();
 
 function Chat() {
     const [messages, setMessages] = useState([
@@ -101,33 +87,33 @@ function Chat() {
     }
 
     return (
-        <div className="App flex justify-center p-20">
-            <div style={{ position: "relative", height: "min-content", width: "700px" }}>
-                <MainContainer>
-                    <ChatContainer>
-                        <ConversationHeader>
-                              <Avatar
-                                name="Maya - Your Personal Assistant"
-                                src="https://chatscope.io/storybook/react/assets/emily-xzL8sDL2.svg"
-                            />
-                            <ConversationHeader.Content
-                                info="Active"
-                                userName="Maya"
-                            />
-                        </ConversationHeader>
-                        <MessageList
-                            scrollBehavior="smooth"
-                            typingIndicator={isTyping ? <TypingIndicator content="ChatGPT is typing" /> : null}
-                        >
-                            {messages.map((message, i) => (
-                                <Message key={i} model={message} />
-                            ))}
-                        </MessageList>
-                        <MessageInput placeholder="Type message here" onSend={handleSend} />
-                    </ChatContainer>
-                </MainContainer>
-            </div>
+        // <div className="App flex justify-center p-20">
+        <div className='hero min-h-screen'>
+            <MainContainer className='p-20'>
+                <ChatContainer>
+                    <ConversationHeader>
+                        <Avatar
+                            name="Maya - Your Personal Assistant"
+                            src="https://chatscope.io/storybook/react/assets/emily-xzL8sDL2.svg"
+                        />
+                        <ConversationHeader.Content
+                            info="Active"
+                            userName="Maya"
+                        />
+                    </ConversationHeader>
+                    <MessageList
+                        scrollBehavior="smooth"
+                        typingIndicator={isTyping ? <TypingIndicator content="ChatGPT is typing" /> : null}
+                    >
+                        {messages.map((message, i) => (
+                            <Message key={i} model={message} />
+                        ))}
+                    </MessageList>
+                    <MessageInput placeholder="Type message here" onSend={handleSend} />
+                </ChatContainer>
+            </MainContainer>
         </div>
+        // </div>
     );
 }
 
