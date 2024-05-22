@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Table } from 'antd';
+import { Card, Table, Spin } from 'antd';
 import { fetchData } from './data';
 import LineGraphSalary from './LineGraphSalary';
 import LineGraphJobs from './LineGraphJobs';
+import NavBar from './NavBar';
+import Chat from './Chat';
+import Chatbot from './Chatbot';
 
 function App() {
   const [data, setData] = useState([]);
@@ -24,8 +27,21 @@ function App() {
     getData();
   }, []);
 
+  // const contentStyle = {
+  //   padding: 50,
+  //   background: 'rgba(0, 0, 0, 0.05)',
+  //   borderRadius: 4,
+  // };
+  // const content = <div style={contentStyle} />;
+
   if (loading) {
-    return <div className='text-center'>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <span className="flex flex-row justify-center align-middle text-center loading loading-spinner text-primary"></span>
+        <span className='taxt-primary'>Loading...</span>
+      </div>
+      // <Spin tip="Loading">{content}</Spin>
+    )
   }
   console.log('data', data);
   const processedData = data.reduce((acc, curr) => {
@@ -53,6 +69,7 @@ function App() {
     return acc;
   }, {});
   console.log('processedData', processedData);
+
   const tableData = Object.values(processedData).map(item => ({
     key: item.year,
     year: item.year,
@@ -101,18 +118,30 @@ function App() {
 
   return (
     <>
-      <h1 className='text-center text-bold text-4xl p-10'>ML Engineers Salaries 2020-24</h1>
-      <Table
-        columns={mainColumns}
-        dataSource={tableData}
-        expandable={{ expandedRowRender }}
-        pagination={false}
-      />
-      <div className='md:w-1/2 md:h-1/2 flex flex-col sm:flex-row p-10'>
-        <LineGraphJobs data={tableData} />
-        <LineGraphSalary data={tableData} />
+      {/* <NavBar /> */}
+      <div className='min-h-screen'>
+        <h1 className='font-serif text-center text-bold text-4xl p-20'>ML Engineers Salaries 2020-24</h1>
+        {/* <Card className='p-10'>
+        <p className='text-center'>This is a table of ML Engineers Salaries from 2020 to 2024</p>
+      </Card> */}
+        {/* <div className='container px-10'> */}
+        <div className='border-cyan-600 border border-x-4 rounded-md border-y-0'>
+          <Table
+            columns={mainColumns}
+            dataSource={tableData}
+            expandable={{ expandedRowRender }}
+            pagination={false}
+          />
+        </div>
+        {/* </div> */}
+        <div className='md:w-1/2 md:h-1/2 flex flex-col md:flex-row p-10'>
+          <LineGraphJobs data={tableData} />
+          <LineGraphSalary data={tableData} />
+        </div>
+        <Chatbot />
       </div>
     </>
+
   );
 }
 
