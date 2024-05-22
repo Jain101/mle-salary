@@ -8,7 +8,6 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import "./index.css";
 import Hero from './Hero.jsx'
 
 const router = createBrowserRouter([
