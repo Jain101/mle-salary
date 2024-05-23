@@ -1,5 +1,5 @@
 
-export const processData = (data) => {
+export const getProcessData = (data) => {
     return data.reduce((acc, curr) => {
         const year = curr.work_year;
         const salary = Number(curr.salary_in_usd);

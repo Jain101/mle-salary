@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Table, Spin } from 'antd';
-import { fetchData } from './data';
-import LineGraphSalary from './components/LineGraphSalary';
-import LineGraphJobs from './components/LineGraphJobs';
-import MainTable from './components/MainTable';
-import { processData } from './utils/preprocess';
-import { tabledData } from './utils/tabledata';
+import { fetchData } from '../utils/data';
+import LineGraphSalary from './LineGraphSalary';
+import LineGraphJobs from './LineGraphJobs';
+import MainTable from './MainTable';
+import { getProcessData } from '../utils/preprocess';
+import { getTableData } from '../utils/tabledata';
+import Loader from './Loader';
 
 
-function App() {
+function Dashboard() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -16,7 +16,6 @@ function App() {
     const getData = async () => {
       try {
         const fetchedData = await fetchData();
-        console.log('fetched data', fetchedData);
         setData(fetchedData);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -24,24 +23,15 @@ function App() {
         setLoading(false);
       }
     };
-
     getData();
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <span className="flex flex-row justify-center align-middle text-center loading loading-spinner text-primary"></span>
-        <span className='text-primary'>Loading...</span>
-      </div>
-      // <Spin tip="Loading">{content}</Spin>
-    )
+    return <Loader />
   }
-  const processedData = processData(data);
-  console.log('processedData', processedData);
+  const processedData = getProcessData(data);
+  const tableData = getTableData(processedData)
 
-  const tableData = tabledData(processedData)
-  console.log('tableData', tableData);
   return (
     <>
       <div className='min-h-screen'>
@@ -55,8 +45,7 @@ function App() {
         </div>
       </div>
     </>
-
   );
 }
 
-export default App;
+export default Dashboard;

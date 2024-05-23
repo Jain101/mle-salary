@@ -1,4 +1,4 @@
-export const tabledData = (processedData) => {
+export const getTableData = (processedData) => {
     return Object.values(processedData).map(item => ({
         key: item.year,
         year: item.year,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator, ConversationHeader, Avatar } from '@chatscope/chat-ui-kit-react';
-import { fetchData } from '../data';
+import { fetchData } from '../utils/data';
 
 // const API_KEY = process.env.REACT_APP_OPENAI_API_KEY;
 const API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
@@ -60,7 +60,6 @@ function Chat() {
             }
             return { role: role, content: messageObject.message }
         });
-
 
         const apiRequestBody = {
             "model": "gpt-3.5-turbo",
