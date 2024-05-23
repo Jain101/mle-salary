@@ -1,23 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
-import Chat from './Chat.jsx'
+import Chat from './components/Chat.jsx'
 import Layout from './Layout.jsx'
 import './index.css'
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import Hero from './Hero.jsx'
+import Hero from './components/Hero.jsx'
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout/>,
+    element: <Layout />,
     children: [
-      { path: "", element: <Hero/>},
-      { path: "dashboard", element: <App/> },
-      { path: "chatbot", element: <Chat/> },
+      { path: "", element: <Hero /> },
+      { path: "dashboard", element: <App /> },
+      { path: "chatbot", element: <Chat /> },
     ],
   },
 ]);

@@ -1,57 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator, ConversationHeader, Avatar } from '@chatscope/chat-ui-kit-react';
-import { fetchData } from './data';
+import { fetchData } from '../data';
 
 // const API_KEY = process.env.REACT_APP_OPENAI_API_KEY;
-const API_KEY = 'your_api_key_here'
+const API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
 const systemMessage = {
     "role": "system",
-    "content": "Explain things like you're talking to a software professional with 2 years of experience."
+    "content": "Explain things like you're talking to a user who knows nothing about machine learning."
 };
-
-// const data = await fetchData();
-// const data = [
-//     {
-//         "year": 2024,
-//         "experience_level": "MI",
-//         "employment_type": "FT",
-//         "job_title": "Data Scientist",
-//         "salary_in_usd": 120000,
-//         "salary_currency": "USD",
-//         "salary": 120000,
-//         "employee_residence": "AU",
-//         "remote_ratio": 0,
-//         "company_location": "AU",
-//         "company_size": "S"
-//     },
-//     // ... other data rows
-// ];
-
-async function fetchInitialData() {
-    const data = await fetchData();
-    return data;
-}
 
 function Chat() {
     const [messages, setMessages] = useState([
         {
-            message: "Hello, I'm ChatGPT! Ask me anything!",
+            message: "Hello, I'm Maya! I can provide you with insights from the data.",
             sentTime: "just now",
             direction: 'incoming',
-            sender: "ChatGPT"
+            sender: "Maya"
         }
     ]);
     const [isTyping, setIsTyping] = useState(false);
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        async function loadData() {
-            const initialData = await fetchInitialData();
-            setData(initialData);
-        }
-        loadData();
+        const getData = async () => {
+            try {
+                const fetchedData = await fetchData();
+                console.log('openai data', fetchedData);
+                setData(fetchedData);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        getData();
     }, []);
 
     const handleSend = async (message) => {
@@ -71,13 +53,14 @@ function Chat() {
     async function processMessageToChatGPT(chatMessages) {
         let apiMessages = chatMessages.map((messageObject) => {
             let role = "";
-            if (messageObject.sender === "ChatGPT") {
+            if (messageObject.sender === "Maya") {
                 role = "assistant";
             } else {
                 role = "user";
             }
-            return { role: role, content: messageObject.message };
+            return { role: role, content: messageObject.message }
         });
+
 
         const apiRequestBody = {
             "model": "gpt-3.5-turbo",
@@ -86,7 +69,7 @@ function Chat() {
                 ...apiMessages,
                 {
                     role: "system",
-                    content: `Use the following data to help answer questions: ${JSON.stringify(data)}`
+                    content: `Assume that you are a data analyst. Now, Use the following data to help answer questions: ${JSON.stringify(data)}`
                 }
             ],
             "temperature": 0.7,
@@ -97,31 +80,31 @@ function Chat() {
             "frequency_penalty": 0.0
         };
 
-        await fetch("https://api.openai.com/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${API_KEY}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(apiRequestBody)
-        }).then((data) => {
-            return data.json();
-        }).then((data) => {
-            setMessages([...chatMessages, {
-                message: data.choices[0].message.content,
-                direction: 'incoming',
-                sender: "ChatGPT"
-            }]);
-            setIsTyping(false);
-        });
+        await fetch("https://api.openai.com/v1/chat/completions",
+            {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${API_KEY}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(apiRequestBody)
+            }).then((data) => {
+                return data.json();
+            }).then((data) => {
+                console.log('gemini', data);
+                setMessages([...chatMessages, {
+                    message: data.choices[0].message.content,
+                    sender: "Maya"
+                }]);
+                setIsTyping(false);
+            });
     }
 
     return (
-        // <div className="App flex justify-center p-20">
-        // <div className='hero min-h-screen'>
         <MainContainer className='p-20'>
             <ChatContainer style={{
                 height: '500px',
+
             }}>
                 <ConversationHeader>
                     <Avatar
@@ -135,7 +118,7 @@ function Chat() {
                 </ConversationHeader>
                 <MessageList
                     scrollBehavior="smooth"
-                    typingIndicator={isTyping ? <TypingIndicator content="ChatGPT is typing" /> : null}
+                    typingIndicator={isTyping ? <TypingIndicator content="Maya is typing" /> : null}
                 >
                     {messages.map((message, i) => (
                         <Message key={i} model={message} />
@@ -144,9 +127,9 @@ function Chat() {
                 <MessageInput placeholder="Type message here" onSend={handleSend} />
             </ChatContainer>
         </MainContainer>
-        // </div>
-        // </div>
     );
 }
 
 export default Chat;
+
+
