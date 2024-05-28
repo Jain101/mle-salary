@@ -8,7 +8,7 @@ import { DataSource } from 'typeorm';
 
 const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 const model = new ChatGroq({
-    apiKey: API_KEY,
+    apiKey: 'API_KEY',
     model: "mixtral-8x7b-32768",
     temperature: 0.7,
     maxTokens: 1000,
