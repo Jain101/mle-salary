@@ -1,4 +1,5 @@
 import Papa from 'papaparse';
+// import { CSVLoader } from '@langchain/community/document_loaders/fs/csv'
 
 // Function to fetch data from the CSV file and parse it into JSON
 export const fetchData = async () => {
@@ -7,7 +8,6 @@ export const fetchData = async () => {
             download: true,
             header: true,
             complete: function (results) {
-                //console.log('hey1', results.data[0]);
                 resolve(results.data);
             },
             error: function (err) {
@@ -16,3 +16,4 @@ export const fetchData = async () => {
         });
     });
 }
+

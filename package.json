@@ -11,16 +11,19 @@
   },
   "dependencies": {
     "@chatscope/chat-ui-kit-react": "^2.0.3",
-    "@google/generative-ai": "^0.11.3",
+    "@langchain/groq": "^0.0.12",
     "antd": "^5.17.2",
     "chart.js": "^4.4.3",
-    "fs": "^0.0.1-security",
+    "dotenv": "^16.4.5",
+    "langchain": "^0.2.2",
     "papaparse": "^5.4.1",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "sqlite3": "^5.1.7",
+    "typeorm": "^0.3.20"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
