@@ -13,6 +13,7 @@
     "@chatscope/chat-ui-kit-react": "^2.0.3",
     "@langchain/groq": "^0.0.12",
     "antd": "^5.17.2",
+    "axios": "^1.7.2",
     "chart.js": "^4.4.3",
     "dotenv": "^16.4.5",
     "langchain": "^0.2.2",

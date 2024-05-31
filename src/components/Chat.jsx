@@ -1,18 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator, ConversationHeader, Avatar } from '@chatscope/chat-ui-kit-react';
-import { ChatGroq } from '@langchain/groq'
-import { SqlDatabase } from "langchain/sql_db";
-import { createSqlAgent, SqlToolkit } from "langchain/agents/toolkits/sql";
-import { DataSource } from 'typeorm';
-
-const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
-const model = new ChatGroq({
-    apiKey: 'API_KEY',
-    model: "mixtral-8x7b-32768",
-    temperature: 0.7,
-    maxTokens: 1000,
-});
+import axios from 'axios';
 
 function Chat() {
     const [messages, setMessages] = useState([
@@ -25,23 +14,8 @@ function Chat() {
     ]);
     const [isTyping, setIsTyping] = useState(false);
 
-    const runAgent = async (input) => {
-        const datasource = new DataSource({
-            type: 'sqlite',
-            database: '../../test.db',
-        })
-        const db = await SqlDatabase.fromDataSourceParams({
-            appDataSource: datasource,
-            includesTables: ['employees']
-        });
-        const toolkit = new SqlToolkit(db, model);
-        const executor = createSqlAgent(model, toolkit, { topK: 16494 });
-        console.log(`Executing with input "${input}"...`);
-        const result = await executor.invoke({ input });
-        return result.output
-    }
     const handleSend = async (message) => {
-        console.log('message', message);
+        //console.log('message', message);
         const newMessage = {
             message: message,
             direction: 'outgoing',
@@ -57,12 +31,12 @@ function Chat() {
     const processMessageToSQLAgent = async (chatMessages) => {
         const lastUserMessage = chatMessages.filter(msg => msg.sender === 'user').slice(-1)[0].message;
         console.log('lastUserMessage', lastUserMessage);
-        
         try {
-            const fetchedMessage = await runAgent(lastUserMessage);
-            console.log('msg', fetchedMessage);
+            const response = await axios.post('https://cassie.onrender.com/query', { input: lastUserMessage });
+            //const res = await response.json;
+            console.log('msg', response.data.output);
             const botMessage = {
-                message: fetchedMessage,
+                message: response.data.output,
                 sender: "Cassie",
                 direction: 'incoming',
             };
